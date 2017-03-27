@@ -1,3 +1,5 @@
+$(document).ready(function(){
+
 var questions = {
 	q1: "What color is the sky?",
 	q2: "How many planets are in our solar system?",
@@ -7,8 +9,10 @@ var questions = {
 	a3: ["26", "24", "27"]
 }
 
+var currentQuestion = 0;
 var interval;
 var answer;
+
 
 var timer = {
 	time: 6,
@@ -16,9 +20,11 @@ var timer = {
     	timer.time--;
     	$("#timer").html("Time Remaining:" + timer.time);
     	if(timer.time === 0){
+      		timer.stop();
+      	$("#question").append("<h1>Time's up!</h2><br><br><button id='next'>Next Question</button>")
       	timer.stop();
-      	$("#question").html("<h1>Time's up!</h2>")
     	}
+
     },
 	start: function() {
       interval = setInterval(timer.decrement, 1000)
@@ -32,6 +38,28 @@ var timer = {
     },
 };//end timer{}
 
+
+
+//**********Event Handlers************/
+
+$("#button").on("click", function(){
+	$(this).hide();
+	startTrivia();
+	console.log(currentQuestion)
+}); //end #button click event
+
+$("#next").on("click", function(){
+	$(this).hide();
+	if(currentQuestion === 2){
+		question2();
+	} else if(currentQuestion === 3){
+		question3();
+		}
+});//end #next click event
+
+
+/************Functions****************/
+
 function question1(){
 	$("#question").html(questions.q1 + "<br><br>"
 		+ "<button>" + questions.a1[0] + "</button><br><br>"
@@ -39,6 +67,7 @@ function question1(){
 		+ "<button>" + questions.a1[2] + "</button><br><br>"
 		)
 	$("button").on("click", function(){
+		currentQuestion++
 		if($(this).text() === "blue"){
 			answer = true;
 		} else{
@@ -46,10 +75,10 @@ function question1(){
 		}
 		timer.stop();
 		timer.reset();
-		answerMessage();
-		question2()
+		timer.start();
+		answerMessage(answer, question2);
 	});//end button click
-};//end question3()
+};//end question1()
 
 function question2(){
 	$("#question").html(questions.q2 + "<br><br>"
@@ -57,18 +86,21 @@ function question2(){
 		+ "<button>" + questions.a2[0] + "</button><br><br>"
 		+ "<button>" + questions.a2[2] + "</button><br><br>"
 		)
-	timer.start();
+
 	$("button").on("click", function(){
+		currentQuestion++
 		if($(this).text() === "8"){
 			answer = true;
 		} else{
 			answer = false;
 		}
 		timer.stop();
-		answerMessage();
+		timer.reset();
+		timer.start();
+		answerMessage(answer);
 		question3();
 	});//end button click
-};//end question3()
+};//end question2()
 
 function question3(){
 	$("#question").html(questions.q3 + "<br><br>"
@@ -76,7 +108,6 @@ function question3(){
 		+ "<button>" + questions.a3[1] + "</button><br><br>"
 		+ "<button>" + questions.a3[0] + "</button><br><br>"
 		)
-	timer.start();
 	$("button").on("click", function(){
 		if($(this).text() === "26"){
 			answer = true;
@@ -84,16 +115,17 @@ function question3(){
 			answer = false;
 		}
 		timer.stop();
-		answerMessage();
+		answerMessage(answer);
 	});//end button click
 };//end question3()
 
-function answerMessage (){
+function answerMessage (answer, next){
 	if(answer === true){
-		$("#question").html("<h1>You got it!</h2>")
+		$("#question").html("<h1>You got it!</h2><br><br><button id='next'>Next Question</button>")
 	} else{
-		$("#question").html("<h1>Wrong answer!</h2>")
+		$("#question").html("<h1>Wrong answer!</h2><br><br><button id='next'>Next Question</button>")
 	}
+	timer.stop();
 };//end answerMessage()
 
 function startTrivia(){
@@ -101,12 +133,7 @@ function startTrivia(){
 	timer.start();
 };//end startTrivia()
 
-$("#button").on("click", function(){
-	$(this).hide();
-	startTrivia();
-
-}); //end #button click function
-
+});//end $(document).ready
 
 
 
