@@ -9,7 +9,7 @@ var questions = {
 	a3: ["26", "24", "27"]
 }
 
-var currentQuestion = 0;
+var currentQuestion = 1;
 var interval;
 var answer;
 
@@ -48,7 +48,8 @@ $("#button").on("click", function(){
 	console.log(currentQuestion)
 }); //end #button click event
 
-$("#next").on("click", function(){
+$(document).on("click", "#next", function(){
+	console.log(currentQuestion);
 	$(this).hide();
 	if(currentQuestion === 2){
 		question2();
